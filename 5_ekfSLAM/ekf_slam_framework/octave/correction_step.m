@@ -80,7 +80,7 @@ for i = 1:m
 endfor
 
 % TODO: Construct the sensor noise matrix Q
-sensorNoise = 0.1; # 0.01
+sensorNoise = 0.01;
 Q = eye(2*m, 2*m)*sensorNoise;
 
 % TODO: Compute the Kalman gain
