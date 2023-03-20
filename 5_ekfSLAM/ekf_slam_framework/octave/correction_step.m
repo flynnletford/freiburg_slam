@@ -31,8 +31,10 @@ for i = 1:m
 
 	% Get the id of the landmark corresponding to the i-th observation
 	landmarkId = z(i).id;
+
 	% If the landmark is observed for the first time:
-	if(observedLandmarks(landmarkId)==false)
+	if(!observedLandmarks(landmarkId))
+
 		% TODO: Initialize its pose in mu based on the measurement and the current robot pose:
 		mu(2*landmarkId+2) = mu(1) + z(i).range*cos(z(i).bearing + mu(3));
 		mu(2*landmarkId+3) = mu(2) + z(i).range*sin(z(i).bearing + mu(3));
@@ -48,16 +50,16 @@ for i = 1:m
 	% TODO: Use the current estimate of the landmark pose
 	% to compute the corresponding expected measurement in expectedZ:
 
-	Lx = mu(2*i+2);
-	Ly = mu(2*i+3);
+	Lx = mu(2*landmarkId+2);
+	Ly = mu(2*landmarkId+3);
 
 	del = zeros(2,1);
 	del(1,1) = Lx - mu(1);
-	del(2,1) - Ly - mu(2);
+	del(2,1) = Ly - mu(2);
 	q = del.' * del;
 
 	expectedZ(2*i-1) = sqrt(q);
-	expectedZ(2*i) = atan2(del(2), del(1)) - mu(3);
+	expectedZ(2*i) = atan2(del(2, 1), del(1, 1)) - mu(3);
 
 	% TODO: Compute the Jacobian Hi of the measurement function h for this observation
 	lowH = [-sqrt(q)*del(1), -sqrt(q)*del(2), 0, sqrt(q)*del(1), sqrt(q)*del(2);
@@ -73,17 +75,12 @@ for i = 1:m
 
 	Hi = lowH*F;
 
-
-
 	% Augment H with the new Hi
 	H = [H;Hi];	
 endfor
 
-disp("m: "), disp(m);
-disp("H dimensions: "), disp(size(H));
-
 % TODO: Construct the sensor noise matrix Q
-sensorNoise = 0.01;
+sensorNoise = 0.1; # 0.01
 Q = eye(2*m, 2*m)*sensorNoise;
 
 % TODO: Compute the Kalman gain
@@ -93,14 +90,11 @@ K = sigma * H.' * pinv(inner);
 % TODO: Compute the difference between the expected and recorded measurements.
 % Remember to normalize the bearings after subtracting!
 % (hint: use the normalize_all_bearings function available in tools)
-disp("Z: "), disp(Z);
-disp("expectedZ: "), disp(expectedZ);
 innovation = Z - expectedZ;
 innovation = normalize_all_bearings(innovation);
 
 % TODO: Finish the correction step by computing the new mu and sigma.
 % Normalize theta in the robot pose.
-disp(K*innovation);
 mu = mu + K*innovation;
 mu(3) = normalize_angle(mu(3));
 

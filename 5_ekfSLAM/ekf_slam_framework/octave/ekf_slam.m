@@ -46,13 +46,13 @@ sigma = [[robSigma robMapSigma];[robMapSigma' mapSigma]];
 
 % toogle the visualization type
 %showGui = true;  % show a window while the algorithm runs
-showGui = false; % plot to files instead
+showGui = true; % plot to files instead
 
 % Perform filter update for each odometry-observation pair read from the
 % data file.
 for t = 1:size(data.timestep, 2)
 
-    disp("t = "), disp(t)
+    disp("Timestep: "), disp(t)
 
     % Perform the prediction step of the EKF
     [mu, sigma] = prediction_step(mu, sigma, data.timestep(t).odometry);
@@ -62,11 +62,10 @@ for t = 1:size(data.timestep, 2)
 
     %Generate visualization plots of the current state of the filter
     plot_state(mu, sigma, landmarks, t, observedLandmarks, data.timestep(t).sensor, showGui);
-    disp("Current state vector:")
-    disp("mu = "), disp(mu)
 endfor
 
 disp("Final system covariance matrix:"), disp(sigma)
+
 % Display the final state estimate
 disp("Final robot pose:")
 disp("mu_robot = "), disp(mu(1:3)), disp("sigma_robot = "), disp(sigma(1:3,1:3))

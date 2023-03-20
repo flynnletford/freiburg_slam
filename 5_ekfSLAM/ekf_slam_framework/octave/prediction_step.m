@@ -8,19 +8,18 @@ function [mu, sigma] = prediction_step(mu, sigma, u)
 % TODO: Compute the new mu based on the noise-free (odometry-based) motion model
 % Remember to normalize theta after the update (hint: use the function normalize_angle available in tools)
 
-deltaT = 1.0;
 N = (max(size(mu))-3)/2;
 
-mu(1) = mu(1) + -u.t/u.r1*sin(mu(3)) + u.t/u.r1*sin(mu(3)+u.r1*deltaT);
-mu(2) = mu(2) + u.t/u.r1*cos(mu(3)) - u.t/u.r1*cos(mu(3)+u.r1*deltaT);
-mu(3) = mu(3) + u.r1*deltaT + u.r1*deltaT;
+mu(1) = mu(1) + u.t*cos(mu(3)+u.r1);
+mu(2) = mu(2) + u.t*sin(mu(3)+u.r1);
+mu(3) = mu(3) + u.r1+ u.r1;
 
 % Normalise our theta.
 mu(3) = normalize_angle(mu(3));
 
 % TODO: Compute the 3x3 Jacobian Gx of the motion model
-Gx = [1, 0, -u.t/u.r1*cos(mu(3)) + u.t/u.r1*cos(mu(3)+u.r1*deltaT);
-      0, 1, -u.t/u.r1*sin(mu(3)) + u.t/u.r1*sin(mu(3)+u.r1*deltaT)
+Gx = [1, 0, -u.t*sin(mu(3)+u.r1);
+      0, 1, u.t*cos(mu(3)+u.r1);
       0, 0, 1];
 
 % TODO: Construct the full Jacobian G
