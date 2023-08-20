@@ -45,7 +45,7 @@ offset = [offsetX; offsetY];
 
 % Main loop for updating map cells.
 % You can also take every other point when debugging to speed up the loop (t=1:2:size(poses,1))
-for(t=1:size(poses,1))
+for(t=1:2:size(poses,1))
 	t
 	% Robot pose at time t.
 	robPose = [poses(t,1);poses(t,2);poses(t,3)];

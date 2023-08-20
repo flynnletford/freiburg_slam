@@ -4,5 +4,6 @@ function l=prob_to_log_odds(p)
 
 % TODO: compute l.
 
+l = log(p./(1-p));
 
 end

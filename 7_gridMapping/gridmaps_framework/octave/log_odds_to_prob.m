@@ -4,5 +4,7 @@ function p = log_odds_to_prob(l)
 
 % TODO: compute p.
 
+p = 1 - ( 1./( 1+exp(l) ));
+
 
 end
