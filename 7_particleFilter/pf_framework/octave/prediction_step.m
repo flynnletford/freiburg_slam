@@ -8,9 +8,9 @@ function particles = prediction_step(particles, u, noise)
 % noise parameters
 % Assume Gaussian noise in each of the three parameters of the motion model.
 % These three parameters may be used as standard deviations for sampling.
-r1Noise = noise(1);
-transNoise = noise(2);
-r2Noise = noise(3);
+r1NoiseStdDev = noise(1);
+transNoiseStdDev = noise(2);
+r2NoiseStdDev = noise(3);
 
 numParticles = length(particles);
 
@@ -20,6 +20,17 @@ for i = 1:numParticles
   particles(i).history{end+1} = particles(i).pose;
 
   % TODO: sample a new pose for the particle
+  r1Noise = r1NoiseStdDev * randn();
+  transNoise = transNoiseStdDev * randn();
+  r2Noise = r2NoiseStdDev * randn();
+
+  r1 = u.r1 + r1Noise;
+  t = u.t + transNoise;
+  r2 = u.r2 + r2Noise;
+
+  particles(i).pose(1) = particles(i).pose(1) + t * cos(particles(i).pose(3) + r1);
+  particles(i).pose(2) = particles(i).pose(2) + t * sin(particles(i).pose(3) + r1);
+  particles(i).pose(3) = particles(i).pose(3) + r1 + r2;
   
 
 end
