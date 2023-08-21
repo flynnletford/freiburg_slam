@@ -18,7 +18,7 @@ probOcc = 0.9;
 probFree = 0.35;
 
 % Map grid size in meters. Decrease for better resolution.
-gridSize = 0.5;
+gridSize = 0.1;
 
 % Set up map boundaries and initialize map.
 border = 30;
@@ -45,8 +45,8 @@ offset = [offsetX; offsetY];
 
 % Main loop for updating map cells.
 % You can also take every other point when debugging to speed up the loop (t=1:2:size(poses,1))
-for(t=1:2:size(poses,1))
-	t
+for(t=1:1:size(poses,1))
+
 	% Robot pose at time t.
 	robPose = [poses(t,1);poses(t,2);poses(t,3)];
 	

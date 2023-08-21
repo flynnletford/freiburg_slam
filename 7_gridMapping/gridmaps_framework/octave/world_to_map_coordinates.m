@@ -13,7 +13,7 @@ pntsMap = zeros(2,columns(pntsWorld));
 offsetX = offset(1);
 offsetY = offset(2);
 
-for i = columns(pntsWorld)
+for i = 1:columns(pntsWorld)
 
     x = (pntsWorld(1,i) - offsetX) / gridSize;
     y = (pntsWorld(2,i) - offsetY) / gridSize;
