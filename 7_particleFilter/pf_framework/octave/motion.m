@@ -32,6 +32,23 @@ for t = 1:size(data.timestep, 2)
     % Perform the prediction step of the particle filter
     particles = prediction_step(particles, data.timestep(t).odometry, noise);
 
+    % re-weight the particles according to their distance to [0 0]
+    sigma = diag([0.2 0.2]);
+    for i = 1:numParticles
+      pose = particles(i).pose;
+      newPose = pose(1:2); % Our resampling doesn't use theta so we remove it from the pose we pass it.
+      particles(i).weight = exp(-1/2 * newPose' * inv(sigma) * newPose);
+    end
+
+    resampledParticles = resample(particles);
+
+    % plot the particles before (red) and after resampling (blue)
+    bpos = [particles.pose];
+    apos = [resampledParticles.pose];
+    plot(bpos(1,:), bpos(2,:), 'r+', 'markersize', 5, apos(1,:), apos(2,:), 'b*', 'markersize', 5);
+
+    particles = resampledParticles;
+
     % Generate visualization plots of the current state of the filter
     plot_state(particles, t);
 end

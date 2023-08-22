@@ -20,9 +20,9 @@ for i = 1:numParticles
   particles(i).history{end+1} = particles(i).pose;
 
   % TODO: sample a new pose for the particle
-  r1Noise = r1NoiseStdDev * randn();
-  transNoise = transNoiseStdDev * randn();
-  r2Noise = r2NoiseStdDev * randn();
+  r1Noise = normrnd(0, r1NoiseStdDev);
+  transNoise = normrnd(0, transNoiseStdDev);
+  r2Noise = normrnd(0, r2NoiseStdDev);
 
   r1 = u.r1 + r1Noise;
   t = u.t + transNoise;

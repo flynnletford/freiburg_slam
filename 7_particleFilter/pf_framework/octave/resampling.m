@@ -9,6 +9,7 @@ numParticles = 1000;
 
 % initialize the particles array
 particles = struct;
+disp('Creating particles')
 for i = 1:numParticles
   particles(i).weight = 1. / numParticles;
   particles(i).pose = normrnd([0 0]', [1 2]');
