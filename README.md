@@ -24,3 +24,12 @@ The weight of each particle is then calculated. Particles whose measurements mos
 Low variance resampling is used where particles with the highest weights are more likely to remain in the particle pool for the next timestep.
 
 ![alt-text](https://github.com/flynnletford/freiburg_slam/blob/4c9aef9ae88b47e9ae1e3531acbf27f195b9fe12/8_fastSLAM/fastSLAM.gif)
+
+## Least Squares - Odometry Calibration
+The least squares algorithm is used to find the function which minimises the squared error of the predicted vs ground truth states.
+
+In the case of this odometry calibration example, the ground truth states are approximated using a scan matched data set. The goal was to find the 3x3 matrix which best corrects the odometry error when compared with the ground truth data set.
+
+![image](https://github.com/flynnletford/freiburg_slam/assets/46580365/d8517145-4baf-4b58-b8a3-9316dc1b3e7a)
+
+
