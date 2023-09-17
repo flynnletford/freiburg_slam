@@ -13,51 +13,26 @@ function X = ls_calibrate_odometry(Z)
 
   informationMatrix = eye(3);
 
-  % Maximum number of iterations and convergence threshold
-  max_iterations = 100;
-  convergence_threshold = 1e-6;
+  % TODO: initialize H and b of the linear system
+  H = zeros(9, 9);
+  bT = zeros(1, 9);
 
-  for iter = 1:max_iterations
+  % TODO: loop through the measurements and update H and b
+  % You may call the functions error_function and jacobian, see below
+  % We assume that the information matrix is the identity.
+  for i = 1:size(Z, 1)
+    J = jacobian(i, Z);
+    H = H + J'*informationMatrix*J;
+    err = error_function(i, X, Z);
 
-    disp(iter);
-
-    % TODO: initialize H and b of the linear system
-    H = zeros(9, 9);
-    bT = zeros(1, 9);
- 
-    % TODO: loop through the measurements and update H and b
-    % You may call the functions error_function and jacobian, see below
-    % We assume that the information matrix is the identity.
-    for i = 1:size(Z, 1)
-      J = jacobian(i, Z);
-      H = H + J'*informationMatrix*J;
-      bT = bT + error_function(i, X, Z)'*informationMatrix*J;
-    end
-
-    b = bT';
-
-    delta = reshape(-pinv(H)*b, 3, 3);
-
-    disp("X: ");
-    disp(X);
-
-    disp("delta: ");
-    disp(delta);
-
-    X = X .+ delta;
-
-    % Check for convergence
-    disp("norm delta: ");
-    disp(norm(delta));
-    
-    if norm(delta) < convergence_threshold
-      disp("converged");
-      break;
-    end
-
+    bT = bT + err'*informationMatrix*J;
   end
 
+  b = bT';
 
+  delta = reshape(-pinv(H)*b, 3, 3);
+
+  X = X .+ delta;
 
   % TODO: solve and update the solution
 end
@@ -72,12 +47,14 @@ end
 function e = error_function(i, X, Z)
   % TODO compute the error of each measurement
 
-  scanMatched = [Z(i, 1); Z(i, 2); Z(i, 3)];
-  odom = [Z(i, 4); Z(i, 5); Z(i, 6)];
+  scanMatched = Z(i, 1:3)';
+  odom = Z(i, 4:6)';
 
   predicted = X*odom;
 
-  e = scanMatched - predicted;
+  rawError = scanMatched - predicted;
+
+  e = rawError; %.*rawError;
 
 end
 
@@ -87,9 +64,12 @@ end
 % J:	the jacobian of the ith measurement
 function J = jacobian(i, Z)
   % TODO compute the Jacobian
-
   z_i = Z(i, 4:6);
 
-  J = [[z_i], [0, 0, 0], [0, 0, 0]; [0, 0, 0], [z_i], [0, 0, 0]; [0, 0, 0], [0, 0, 0], [z_i]];
+  J = zeros(3, 9);
+
+  J(1, 1:3) = -z_i;
+  J(2, 4:6) = -z_i;
+  J(3, 7:9) = -z_i;
 
 end
