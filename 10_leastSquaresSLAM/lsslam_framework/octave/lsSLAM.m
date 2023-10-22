@@ -8,12 +8,12 @@ addpath('tools');
 % only leave one line uncommented
 
 % simulation datasets
-load ../data/simulation-pose-pose.dat
-%load ../data/simulation-pose-landmark.dat
+% load ../data/simulation-pose-pose.dat
+% load ../data/simulation-pose-landmark.dat
 
 % real-world datasets
-%load ../data/intel.dat
-%load ../data/dlr.dat
+% load ../data/intel.dat
+load ../data/dlr.dat
 
 % plot the initial state of the graph
 plot_graph(g, 0);
@@ -21,7 +21,7 @@ plot_graph(g, 0);
 printf('Initial error %f\n', compute_global_error(g));
 
 % the number of iterations
-numIterations = 10; #100;
+numIterations = 100; #100;
 
 % maximum allowed dx
 EPSILON = 10^-4;

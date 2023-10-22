@@ -74,8 +74,8 @@ for eid = 1:length(g.edges)
     i = edge.fromIdx:edge.fromIdx+2;
     j = edge.toIdx:edge.toIdx+1;
 
-    b(i) = b(i) + e'*edge.information*A;
-    b(j) = b(j) + e'*edge.information*B;
+    b(i) = b(i) + (e'*edge.information*A)';
+    b(j) = b(j) + (e'*edge.information*B)';
 
     H(i,i) = H(i,i) + A'*edge.information*A;
     H(i,j) = H(i,j) + A'*edge.information*B;

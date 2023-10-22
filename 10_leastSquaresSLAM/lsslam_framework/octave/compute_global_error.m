@@ -26,19 +26,14 @@ for eid = 1:length(g.edges)
   elseif (strcmp(edge.type, 'L') != 0)
     x = g.x(edge.fromIdx:edge.fromIdx+2);  % the robot pose
     l = g.x(edge.toIdx:edge.toIdx+1);      % the landmark
+    z = edge.measurement;
 
     %TODO compute the error of the constraint and add it to Fx.
     % Use edge.measurement and edge.information to access the
     % measurement and the information matrix respectively.
-    z = v2t(edge.measurement);
-
-    x1 = v2t(x);
-    x2 = v2t([l; 0]);
-
-    err = pinv(z)*(pinv(x)*x2);
-    err(3) = 0;
-    err = t2v(err);
-
+    X = v2t(x);
+    Ri = X(1:2,1:2);
+    err = Ri'*(l-x(1:2))-z;
   end
 
   Fx = Fx + err' * edge.information * err;
