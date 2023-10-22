@@ -32,4 +32,9 @@ In the case of this odometry calibration example, the ground truth states are ap
 
 ![image](https://github.com/flynnletford/freiburg_slam/assets/46580365/d8517145-4baf-4b58-b8a3-9316dc1b3e7a)
 
+## Least Squares - Graph SLAM
+The robot map is represented by a series of nodes interconnected with edges. Each each represent a spatial transform as calculated from sensor data. Least squares is used to reposition the nodes and edges such that the error function across all nodes and edges is minimised. The error function is defined as the difference between the observed position of node xj from node xi and the edge between nodes xj and xi.
 
+This approach was used to create a consistent map on the intel SLAM dataset:
+
+![image](https://github.com/flynnletford/freiburg_slam/blob/c4879e2cf2c5ac6a8676c7df70eeebb74de56e52/10_leastSquaresSLAM/leastSquaresSLAM.gif)
